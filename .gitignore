@@ -1,0 +1,19 @@
+# Build artifacts
+/Debug/
+/Release/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+
+# IDE metadata
+/.settings/
+/.cproject
+/.project
+*.launch
+*.log
+
+# Misc
+*.dep
