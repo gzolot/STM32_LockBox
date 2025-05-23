@@ -1,0 +1,14 @@
+#include "stm32l476xx.h"
+#include <stdint.h>
+
+#define MOSI_GPIO GPIOB
+#define MISO_GPIO GPIOB
+#define NSS_GPIO GPIOB
+#define SCK_GPIO GPIOB
+#define MOSI_OFFSET 15
+#define MISO_OFFSET 14
+#define NSS_OFFSET 12
+#define SCK_OFFSET 13
+
+#define SPI_FREQ 10000000 //10 MHz
+
