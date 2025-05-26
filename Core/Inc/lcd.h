@@ -17,8 +17,8 @@
 #define LCD_GPIO GPIOA
 #define LCD_GPIO_D2_D3 GPIOB
 
-#define APB1_FREQ 4000000  	// 1 MHz
-#define TIM2_FREQ 1000000 	// 4 MHZ
+#define APB1_FREQ 4000000  	// 4 MHz
+#define TIM2_FREQ 1000000 	// 1 MHZ
 
 
 void lcdInit(void);

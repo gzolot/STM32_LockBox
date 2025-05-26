@@ -39,5 +39,6 @@ void spiInit(){
 	NSS_GPIO->AFR[1] &= ~(0xF << ((NSS_OFFSET % 8) * 4));
 	NSS_GPIO->AFR[1] |= (0x5 << ((NSS_OFFSET % 8) * 4));
 
-	SPI2->CR1 =
+	SPI2->CR1 &= ~(SPI_CR1_BR); //ABP1 frequency % 2, baud rate of 2MHz
+
 }

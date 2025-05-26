@@ -10,5 +10,6 @@
 #define NSS_OFFSET 12
 #define SCK_OFFSET 13
 
-#define SPI_FREQ 10000000 //10 MHz
+#define SPI_FREQ 10000000 	//10 MHz
+#define APB1_FREQ 4000000	//4 MHz
 
