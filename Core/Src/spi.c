@@ -16,6 +16,7 @@ void spiInit(){
 
 	NSS_GPIO->MODER &= ~(0b11 << (NSS_OFFSET * 2));
 	NSS_GPIO->MODER |=  (0b01 << (NSS_OFFSET * 2));  	// Output mode because software slave management
+	NSS_GPIO->ODR |= (0b1 << NSS_OFFSET);				// Set NSS because idle is high
 
 	// Set speed for GPIO
 	MOSI_GPIO->OSPEEDR |= (0b11 <<(MOSI_OFFSET * 2));	// Very high speed
@@ -50,4 +51,55 @@ void spiInit(){
 	SPI2->CR2 |= (7 << SPI_CR2_DS_Pos);
 }
 
+static inline void NSSLow() {
+    NSS_GPIO->ODR &= ~(1 << NSS_OFFSET);
+}
 
+static inline void NSSHigh() {
+    NSS_GPIO->ODR |= (1 << NSS_OFFSET);
+}
+
+uint8_t spiSendByte(uint8_t tx_byte){
+	while(!(SPI2->SR & SPI_SR_TXE));	//Wait till there is space in TX fifo
+
+	NSSLow();
+
+	SPI2->DR = tx_byte;
+
+	while(!(SPI2->SR & SPI_SR_RXNE)); 	//Wait till RX fifo is populated with the byte response from the sent byte
+
+	uint8_t rx_byte = SPI2->DR;
+
+	NSSHigh();
+
+	return rx_byte;
+
+}
+
+void spiSendBytes(uint8_t *tx_data, int num_bytes, uint8_t *rx_data){
+
+	NSSLow();
+
+	for (int i = 0; i < num_bytes; i++){
+		while(!(SPI2->SR & SPI_SR_TXE));	//Wait till there is space in TX fifo
+
+		SPI2->DR = tx_data[i];
+
+		while(!(SPI2->SR & SPI_SR_RXNE)); 	//Wait till RX fifo is populated with the byte response from the sent byte
+
+		rx_data[i] = SPI2->DR;
+	}
+
+	NSSHigh();
+
+}
+
+uint8_t spiReadByte(uint8_t tx_byte){
+	return spiSendByte(0x00);
+}
+
+void spiReadBytes(int num_bytes, uint8_t *rx_data){
+	uint8_t tx_data[num_bytes];
+	memset(tx_data, 0x00, num_bytes);
+	spiSendBytes(tx_data, num_bytes, rx_data);
+}

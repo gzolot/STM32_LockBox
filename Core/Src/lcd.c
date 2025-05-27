@@ -16,6 +16,7 @@ void lcdInit(){
 			LCD_GPIO->MODER |= (0b01 << (i * 2));
 			LCD_GPIO->OTYPER &=  ~(1 << i);
 		}
+	TIM2Init();
 }
 
 void TIM2Init(){

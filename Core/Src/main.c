@@ -20,6 +20,8 @@
 #include "main.h"
 #include "keypad.h"
 #include "lcd.h"
+#include "spi.h"
+#include "MFRC522.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -91,13 +93,18 @@ int main(void)
   MX_GPIO_Init();
 
   keypadInit();
+
   lcdInit();
-  TIM2Init();
   lcdBegin();
-  lcdClear();
-  DelayUS(1000);
-  lcdSetCursor(0,0);
-  lcdWriteString("buttocks", 8);
+
+  spiInit();
+
+  uint8_t version = RFIDReadRegister(MFRC_VersionReg);
+
+//  lcdClear();
+//  DelayUS(1000);
+//  lcdSetCursor(0,0);
+//  lcdWriteString("buttocks", 8);
 
 
 
