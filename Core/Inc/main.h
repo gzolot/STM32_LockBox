@@ -28,6 +28,13 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l4xx_hal.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include "keypad.h"
+#include "lcd.h"
+#include "spi.h"
+#include "MFRC522.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */

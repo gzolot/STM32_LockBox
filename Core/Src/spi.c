@@ -38,17 +38,20 @@ void spiInit(){
 	MISO_GPIO->AFR[1] |= (0x5 << ((MISO_OFFSET % 8) * 4));
 
 	SPI2->CR1 &= ~(SPI_CR1_BR);			//ABP1 frequency % 2, baud rate of 2MHz
-	SPI2->CR1 &= ~(SPI_CR1_CPHA); 		//CPHA = 0
-	SPI2->CR1 &= ~(SPI_CR1_CPOL); 		//CPOL = 0
+	SPI2->CR1 &= ~(SPI_CR1_CPHA); 		//CPHA = 0	sampled on first clock edge shifted on second (sampled on rising shifted on falling)
+	SPI2->CR1 &= ~(SPI_CR1_CPOL); 		//CPOL = 0	Logic Low
 	SPI2->CR1 &= ~(SPI_CR1_LSBFIRST); 	//MSB first
 	SPI2->CR1 |= SPI_CR1_MSTR;			//microcontroller set to master
 	SPI2->CR1 |= SPI_CR1_SSM;			//software slave management
+
+	//might not be necessary
 	SPI2->CR1 |= SPI_CR1_SSI; 			//this registers sets or clears NSS, NSS is idle high
 	SPI2->CR1 |= SPI_CR1_SPE;			//SPI enable
 
 	SPI2->CR2 = 0;
 	SPI2->CR2 |= (1 << SPI_CR2_FRXTH_Pos);      // RXNE event when FIFO level >= 8-bit
-	SPI2->CR2 |= (7 << SPI_CR2_DS_Pos);
+	SPI2->CR2 |= (7 << SPI_CR2_DS_Pos);			//data size is set for 8-bit SPI transfer
+
 }
 
 static inline void NSSLow() {

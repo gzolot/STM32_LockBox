@@ -18,10 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "keypad.h"
-#include "lcd.h"
-#include "spi.h"
-#include "MFRC522.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -96,10 +92,18 @@ int main(void)
 
   lcdInit();
   lcdBegin();
+  lcdWriteString("hello ", 6);
+
+  MFRC522Init();
 
   spiInit();
 
   uint8_t version = RFIDReadRegister(MFRC_VersionReg);
+
+  char string_buff[3];
+
+  itoa((int)version, string_buff, 16);
+  lcdWriteString(string_buff, 3);
 
 //  lcdClear();
 //  DelayUS(1000);

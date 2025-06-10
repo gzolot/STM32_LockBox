@@ -8,8 +8,8 @@ void lcdInit(){
 		for (int i = 0; i < 11; i++){
 			if (i == 2 || i == 3){
 				LCD_GPIO_D2_D3->MODER &= ~(0b11 << (i * 2));
-				LCD_GPIO_D2_D3->MODER |= (0b01 << (i * 2));
-				LCD_GPIO_D2_D3->OTYPER &=  ~(1 << i);
+				LCD_GPIO_D2_D3->MODER |= (0b01 << (i * 2));		// 01: General purpose output mode
+				LCD_GPIO_D2_D3->OTYPER &=  ~(1 << i);			// 0: Output push-pull (reset state)
 				continue;
 			}
 			LCD_GPIO->MODER &= ~(0b11 << (i * 2));
@@ -22,11 +22,11 @@ void lcdInit(){
 void TIM2Init(){
 	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
 
-	TIM2->CR1 |= TIM_CR1_ARPE;   	//AAR buffer registerd
+	TIM2->CR1 |= TIM_CR1_ARPE;   	//AAR buffer registered
 	TIM2->CR1 &= ~TIM_CR1_UIFREMAP; //no UIF bit
 	TIM2->CR1 &= ~TIM_CR1_DIR;		//upcounting
-	TIM2->ARR = 0xFFFFFFFF;
-	TIM2->PSC = ((APB1_FREQ / TIM2_FREQ) - 1);
+	TIM2->ARR = 0xFFFFFFFF;			// max count
+	TIM2->PSC = ((APB1_FREQ / TIM2_FREQ) - 1);	//TODO describe this part
 	TIM2->CR1 |= TIM_CR1_CEN;
 }
 
@@ -85,15 +85,18 @@ void lcdSetCursor(uint8_t row, uint8_t col) {
 }
 
 void lcdBegin() {
-    DelayUS(15000);      // Wait >15ms after VCC rises to 4.5V
-    lcdFunctionSet();    // 8-bit, 2-line, 5x8 font
-    DelayUS(4100);       // Wait >4.1ms
-    lcdFunctionSet();    // Repeat
-    DelayUS(100);        // Wait >100µs
-    lcdFunctionSet();    // Confirm
-    lcdDisplayOn();      // Display ON, Cursor OFF, Blink OFF
-    lcdClear();          // Clear display
-    lcdEntryModeSet();   // Entry mode: increment, no shift
+    DelayUS(15000);     // Wait >15ms after VCC rises to 4.5V
+    lcdFunctionSet();   // 8-bit, 2-line, 5x8 font
+    DelayUS(4100);      // Wait >4.1ms
+    lcdFunctionSet();   // Repeat
+    DelayUS(100);       // Wait >100µs
+    lcdFunctionSet();   // Confirm
+    lcdDisplayOn();     // Display ON, Cursor OFF, Blink OFF
+    lcdClear();         // Clear display
+    lcdEntryModeSet();	// Entry mode: increment, no shift
+    DelayUS(1000);
+    lcdClear();
+//    DelayUS(1000);		// Wait 1ms
 }
 
 void writeData(uint8_t data){
